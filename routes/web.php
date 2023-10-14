@@ -23,14 +23,22 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-//routing untuk menampilkan data post
-Route::get('/post', [PostController::class, 'index'])->name('post.index');
 
-//routing untuk menampilkan tambah data
-Route::get('/post/create', [PostController::class, 'create'])->name('post.create');
+Route::middleware('auth', 'verified')->group(function () {
+    //routing untuk menampilkan data post
+    Route::get('/post', [PostController::class, 'index'])->name('post.index');
+    //routing untuk menampilkan tambah data
+    Route::get('/post/create', [PostController::class, 'create'])->name('post.create');
+    //routing untuk menampilkan data post
+    Route::post('/post', [PostController::class, 'store'])->name('post.store');
+    // menampilkan get data edit
+    Route::get('/post/{id}/edit', [PostController::class, 'edit'])->name('post.edit');
+    // update data
+    Route::put('/post/{id}', [PostController::class, 'update'])->name('post.update');
+    // route delete
+    Route::delete('/post/{id}', [PostController::class, 'destroy'])->name('post.destroy');
 
-//routing untuk menampilkan data post
-Route::post('/post', [PostController::class, 'store'])->name('post.store');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
